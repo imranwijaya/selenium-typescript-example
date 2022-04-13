@@ -1,0 +1,46 @@
+version: 2.1
+orbs:
+  node: circleci/node@5.0.2
+  browser-tools: circleci/browser-tools@1.2.5
+jobs:
+  chrome:
+    docker:
+      - image: 'cimg/node:16.14.2-browsers'
+    working_directory: ~/repo
+    steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run tests on headless chrome
+          command: |
+            npm run test:chrome
+      - store_test_results:
+          path: reports
+      - store_artifacts:
+          path: reports
+  firefox:
+    docker:
+      - image: 'cimg/node:16.14.2-browsers'
+    working_directory: ~/repo
+    steps:
+      - browser-tools/install-firefox
+      - browser-tools/install-geckodriver
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run tests on headless firefox
+          command: |
+            npm run test:firefox
+      # - store_test_results:
+      #     path: tests
+      # - store_artifacts:
+      #     path: reports
+workflows:
+  running_tests:
+    jobs:
+      - chrome
+      - firefox:
+          requires:
+            - chrome

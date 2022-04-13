@@ -1,0 +1,2 @@
+# exclude language detection for this folder
+reports/** linguist-vendored
