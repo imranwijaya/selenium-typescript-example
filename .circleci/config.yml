@@ -7,19 +7,26 @@ jobs:
     docker:
       - image: 'cimg/node:16.14.2-browsers'
     working_directory: ~/repo
+    executor: browser-tools/default
     steps:
-      - browser-tools/install-chrome
+      # - browser-tools/install-browser-tools:
+      #     chrome-version: 100.0.4896.88
+      - browser-tools/install-chrome:
+          chrome-version: 100.0.4896.88
+          replace-existing: true
       - browser-tools/install-chromedriver
       - checkout
       - node/install-packages
       - run:
           name: Run tests on headless chrome
           command: |
+            google-chrome --version
+            chromedriver --version
             npm run test:chrome
-      - store_test_results:
-          path: reports
-      - store_artifacts:
-          path: reports
+      # - store_test_results:
+      #     path: reports
+      # - store_artifacts:
+      #     path: reports
   firefox:
     docker:
       - image: 'cimg/node:16.14.2-browsers'

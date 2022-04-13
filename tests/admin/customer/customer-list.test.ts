@@ -11,7 +11,9 @@ describe('Customer List Functionality', function () {
     beforeEach(async function () {
       const browser = await new Browser('firefox').build();
       page = new Pages(browser);
-      await page.login.adminAuthenticate(config.username, config.password);
+      // await page.login.adminAuthenticate(config.username, config.password);
+      await page.login.visit('/login');
+      await page.login.authenticate(config.username, config.password);
       await page.customer.visit('/customer/');
     });
 
@@ -41,7 +43,9 @@ describe('Customer List Functionality', function () {
     beforeEach(async function () {
       const browser = await new Browser('firefox').build();
       page = new Pages(browser);
-      await page.login.adminAuthenticate(config.username, config.password);
+      // await page.login.adminAuthenticate(config.username, config.password);
+      await page.login.visit('/login');
+      await page.login.authenticate(config.username, config.password);
       await page.customer.visit('/customer/');
     });
 
@@ -70,7 +74,9 @@ describe('Customer List Functionality', function () {
     beforeEach(async function () {
       const browser = await new Browser('firefox').build();
       page = new Pages(browser);
-      await page.login.adminAuthenticate(config.username, config.password);
+      // await page.login.adminAuthenticate(config.username, config.password);
+      await page.login.visit('/login');
+      await page.login.authenticate(config.username, config.password);
       await page.customer.visit('/customer/');
     });
 
@@ -89,7 +95,9 @@ describe('Customer List Functionality', function () {
     beforeEach(async function () {
       const browser = await new Browser('firefox').build();
       page = new Pages(browser);
-      await page.login.adminAuthenticate(config.username, config.password);
+      // await page.login.adminAuthenticate(config.username, config.password);
+      await page.login.visit('/login');
+      await page.login.authenticate(config.username, config.password);
       await page.customer.visit('/customer/');
     });
 
@@ -108,7 +116,9 @@ describe('Customer List Functionality', function () {
     beforeEach(async function () {
       const browser = await new Browser('firefox').build();
       page = new Pages(browser);
-      await page.login.adminAuthenticate(config.username, config.password);
+      // await page.login.adminAuthenticate(config.username, config.password);
+      await page.login.visit('/login');
+      await page.login.authenticate(config.username, config.password);
       await page.customer.visit('/customer/');
     });
 
