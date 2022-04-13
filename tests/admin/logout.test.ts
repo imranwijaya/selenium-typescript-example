@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { Browser } from '../../lib/browser';
 import { Pages } from '../../pages/admin';
 import { config } from '../../config/index';
-// import { writeFile } from 'fs/promises';
 
 describe('Logout Functionality', function () {
   let page: Pages;
