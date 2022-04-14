@@ -8,6 +8,7 @@ export class HomePage extends BasePage {
 
   async unauthenticate() {
     await this.click(By.css('[data-test=navigation-control-sidebar]'));
+    await this.driver.sleep(500);
     const controlSidebarVisible = await this.isVisible(
       By.css('[data-test=control-sidebar]'),
     );
