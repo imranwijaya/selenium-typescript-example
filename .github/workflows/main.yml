@@ -18,22 +18,22 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         browser: [chrome, firefox]
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node }}
-        cache: 'npm'
-    - run: npm install
-    - if: ${{ matrix.browser == 'chrome' }}
-      name: Check chromedriver version
-      run: chromedriver --version
-    - if: ${{ matrix.browser == 'firefox' }}
-      name: Check geckodriver version
-      run: geckodriver --version
-    - name: Run test on ${{ matrix.browser }}
-      run: npm run test:${{ matrix.browser }}
-    - name: Upload artifact to reports/${{ matrix.browser }}
-      uses: actions/upload-artifact@v3
-      with:
-        path: reports/${{ matrix.browser }}
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+      - run: npm install
+      - if: ${{ matrix.browser == 'chrome' }}
+        name: Check chromedriver version
+        run: chromedriver --version
+      - if: ${{ matrix.browser == 'firefox' }}
+        name: Check geckodriver version
+        run: geckodriver --version
+      - name: Run test on ${{ matrix.browser }}
+        run: npm run test:${{ matrix.browser }}
+      - name: Upload artifact to reports/${{ matrix.browser }}
+        uses: actions/upload-artifact@v3
+        with:
+          path: reports/${{ matrix.browser }}
