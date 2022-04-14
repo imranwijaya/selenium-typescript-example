@@ -33,7 +33,7 @@ jobs:
         run: geckodriver --version
       - name: Run test on ${{ matrix.browser }}
         run: npm run test:${{ matrix.browser }}
-      - name: Upload artifact to reports/${{ matrix.browser }}
+      - name: Upload artifact to reports/
         uses: actions/upload-artifact@v3
         with:
-          path: reports/${{ matrix.browser }}
+          path: reports/
