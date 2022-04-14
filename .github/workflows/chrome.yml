@@ -1,6 +1,6 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-name: CI - Test
+name: CI - Chrome
 on:
   push:
     branches: [ main ]
@@ -8,18 +8,24 @@ on:
     branches: [ main ]
 jobs:
   test:
-    name: Test on node ${{ matrix.node }} and ${{ matrix.os }}
+    name: ${{matrix.browser}} - Node ${{ matrix.node }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [16]
+        node-version: [16]
         os: [ubuntu-latest, windows-latest]
+        browser: [chrome]
     steps:
     - uses: actions/checkout@v3
+    - uses: nanasess/setup-chromedriver@v1
     - name: Use Node.js ${{ matrix.node }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node }}
         cache: 'npm'
     - run: npm install
+    - run: chromedriver --version
     - run: npm run test:chrome
+    - uses: actions/upload-artifact@v3
+      with:
+        path: reports/
