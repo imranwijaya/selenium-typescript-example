@@ -8,11 +8,11 @@ export class HomePage extends BasePage {
 
   async unauthenticate() {
     await this.click(By.css('[data-test=navigation-control-sidebar]'));
-    const buttonLogoutVisible = await this.isVisible(
-      By.css('[data-test=button-logout]'),
+    const controlSidebarVisible = await this.isVisible(
+      By.css('[data-test=control-sidebar]'),
     );
 
-    if (buttonLogoutVisible) {
+    if (controlSidebarVisible) {
       await this.click(By.css('[data-test=button-logout]'));
       return await this.url();
     }

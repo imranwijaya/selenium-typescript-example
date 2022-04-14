@@ -22,3 +22,5 @@ yarn-error.log*
 *.zip
 *.md
 !README.md
+
+/.circleci

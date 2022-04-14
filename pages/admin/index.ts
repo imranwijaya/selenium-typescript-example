@@ -20,7 +20,9 @@ export class Pages {
   }
 
   async quit() {
-    await this.browser.quit();
+    if (this.browser != null) {
+      await this.browser.quit();
+    }
   }
 
   async cleanup() {
