@@ -8,16 +8,15 @@ on:
     branches: [ main ]
 jobs:
   test:
-    name: ${{matrix.browser}} - Node ${{ matrix.node }} - ${{ matrix.os }}
+    name: ${{matrix.browser}} - node ${{ matrix.node }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16]
+        node: [16]
         os: [ubuntu-latest, windows-latest]
-        browser: [chrome]
+        browser: [chrome, firefox]
     steps:
     - uses: actions/checkout@v3
-    - uses: nanasess/setup-chromedriver@v1
     - name: Use Node.js ${{ matrix.node }}
       uses: actions/setup-node@v3
       with:
@@ -25,7 +24,7 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: chromedriver --version
-    - run: npm run test:chrome
+    - run: npm run test:${{ matrix.browser }}
     - uses: actions/upload-artifact@v3
       with:
-        path: reports/
+        path: reports/${{ matrix.browser }}
