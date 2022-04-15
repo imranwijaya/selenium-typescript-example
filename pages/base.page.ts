@@ -14,10 +14,6 @@ export class BasePage {
     return this.driver.wait(untilElementLocated, 30000);
   }
 
-  // private async openNewTab() {
-  //   return await this.driver.switchTo().newWindow('tab');
-  // }
-
   async browserName() {
     const capabilities = await this.driver.getCapabilities();
     return capabilities.getBrowserName();
@@ -31,7 +27,6 @@ export class BasePage {
   */
   async visit(url: string) {
     if (!url.startsWith('/')) {
-      await this.driver.manage().window().maximize();
       return this.driver.navigate().to(url);
     }
     const baseUrl = config.baseUrl;
