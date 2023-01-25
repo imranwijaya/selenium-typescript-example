@@ -11,7 +11,7 @@ First, clone the [repository](https://github.com/imranwijaya/selenium-typescript
 git clone https://github.com/imranwijaya/selenium-typescript-example.git
 
 #after successful clone
-npm run install
+npm install
 ```
 
 Run test with following command:
