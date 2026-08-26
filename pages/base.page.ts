@@ -124,15 +124,15 @@ export default abstract class BasePage {
     await this.driver.executeScript("arguments[0].blur();", element);
   }
 
-  waitUntilLocated(locator: Locator, timeout = 10000) {
+  waitUntilLocated(locator: Locator, timeout = 10_000) {
     return this.driver.wait(until.elementLocated(locator), timeout);
   }
 
-  waitUntilStale(element: WebElement, timeout = 10000) {
+  waitUntilStale(element: WebElement, timeout = 10_000) {
     return this.driver.wait(until.stalenessOf(element), timeout);
   }
 
-  async waitUntilVisible(element: WebElement, timeout = 10000) {
+  async waitUntilVisible(element: WebElement, timeout = 10_000) {
     return await this.driver.wait(async () => {
       try {
         return await element.isDisplayed();
@@ -142,7 +142,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilNotFound(byCss: string, timeout = 10000) {
+  async waitUntilNotFound(byCss: string, timeout = 10_000) {
     return await this.driver.wait(async () => {
       try {
         await this.getOneElement(byCss);
@@ -157,7 +157,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilHidden(element: WebElement, timeout = 10000) {
+  async waitUntilHidden(element: WebElement, timeout = 10_000) {
     return await this.driver.wait(async () => {
       try {
         return !(await element.isDisplayed());
@@ -167,7 +167,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilEnabled(element: WebElement, timeout = 10000) {
+  async waitUntilEnabled(element: WebElement, timeout = 10_000) {
     return await this.driver.wait(async () => {
       try {
         return await element.isEnabled();
@@ -177,7 +177,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilInteractable(element: WebElement, timeout = 10000) {
+  async waitUntilInteractable(element: WebElement, timeout = 10_000) {
     return await this.driver.wait(async () => {
       try {
         return (await element.isDisplayed()) && (await element.isEnabled());
