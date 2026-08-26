@@ -6,7 +6,7 @@ module.exports = {
   // ─────────────────────────────────────────────
   spec: ["dist/tests/**/*.test.js"],
   extension: ["js", "cjs", "mjs"],
-  require: ["./scripts/register-paths.js"],
+  require: ["./scripts/register-paths.js", "./dist/config/env.js"],
   recursive: false,
 
   // ─────────────────────────────────────────────

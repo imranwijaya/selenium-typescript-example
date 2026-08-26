@@ -6,7 +6,11 @@ module.exports = {
   // ─────────────────────────────────────────────
   spec: ["tests/**/*.test.ts"],
   extension: ["ts"],
-  require: ["ts-node/register", "tsconfig-paths/register"],
+  require: [
+    "ts-node/register",
+    "tsconfig-paths/register",
+    "./config/env.ts",
+  ],
   recursive: false,
 
   // ─────────────────────────────────────────────
