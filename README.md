@@ -176,6 +176,8 @@ Test execution provides multiple forms of evidence:
 
 The Selenium E2E suite has been validated locally and through GitHub Actions using Node.js 24 and the current Selenium WebDriver configuration.
 
+For `main` branch pushes, the generated Mochawesome report is also published through GitHub Pages for browser-based test result review.
+
 ## Project Structure
 
 ```text
