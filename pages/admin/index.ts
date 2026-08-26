@@ -1,35 +1,39 @@
-import { WebDriver } from 'selenium-webdriver';
-import { CustomerPage } from './customer.page';
-import { HomePage } from './home.page';
-import { LoginPage } from './login.page';
+import BasePage from "@pages/base.page";
 
-export class Pages {
-  public login: LoginPage;
-  public home: HomePage;
-  public customer: CustomerPage;
-
-  constructor(public browser: WebDriver) {
-    this.login = new LoginPage(browser);
-    this.home = new HomePage(browser);
-    this.customer = new CustomerPage(browser);
+export default class Admin extends BasePage {
+  get contentHeader() {
+    return this.getDataTest("content-header");
   }
 
-  async dispose() {
-    await this.cleanup();
-    await this.close();
+  get controlSidebarButton() {
+    return this.getDataTest("navigation-control-sidebar");
   }
 
-  async quit() {
-    if (this.browser != null) {
-      await this.browser.quit();
-    }
+  get controlSidebar() {
+    return this.getDataTest("control-sidebar");
   }
 
-  async cleanup() {
-    await this.browser.manage().deleteAllCookies();
+  get logoutButton() {
+    return this.getDataTest("button-logout");
   }
 
-  async close() {
-    await this.browser.close();
+  menuActiveClass(id: string) {
+    return this.getDataTest(`menu-${id}-link`);
+  }
+
+  menuText(id: string) {
+    return this.getDataTest(`menu-${id}-text`);
+  }
+
+  breadcrumb(level: number) {
+    return this.getDataTest(`breadcrumb-${level}`);
+  }
+
+  breadcrumbText(level: number) {
+    return this.getDataTest(`breadcrumb-${level}`);
+  }
+
+  breadcrumbLink(level: number) {
+    return this.getDataTest(`breadcrumb-${level}`);
   }
 }

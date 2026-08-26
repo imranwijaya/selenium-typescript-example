@@ -1,47 +1,59 @@
 {
   "name": "selenium-typescript-example",
-  "version": "1.0.0",
-  "description": "Selenium WebDriver Typescript using Page Object Models",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Web automation testing example using Selenium and TypeScript with the Page Object Model pattern.",
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "npx tsc",
-    "pretest": "npm run build",
-    "test": "mocha",
-    "pretest:chrome": "npm run build",
-    "test:chrome": "cross-env BROWSER_ENV=true BROWSER_NAME=chrome mocha",
-    "pretest:firefox": "npm run build",
-    "test:firefox": "cross-env BROWSER_ENV=true BROWSER_NAME=firefox mocha"
+    "dev": "mocha --config .mocharc.dev.js",
+    "dev:watch": "mocha --config .mocharc.dev.js --watch --watch-files \"**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "npm run build && mocha"
   },
   "keywords": [
     "selenium",
-    "node",
-    "typescript"
+    "typescript",
+    "page object model",
+    "e2e",
+    "test automation",
+    "testing",
+    "qa"
   ],
   "author": "Imran Wijaya",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/imranwijaya/selenium-typescript-example.git"
   },
-  "license": "ISC",
+  "engines": {
+    "node": ">=24"
+  },
   "devDependencies": {
+    "@faker-js/faker": "^10.6.0",
     "@types/chai": "^5.2.3",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^24.0.0",
-    "@types/selenium-webdriver": "^4.1.29",
+    "@types/node": "^26.2.0",
+    "@types/selenium-webdriver": "^4.35.6",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
-    "chai": "^5.3.3",
-    "cross-env": "^10.0.0",
-    "eslint": "^8.57.1",
+    "chai": "^6.2.2",
+    "dayjs": "^1.11.23",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.9.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "mocha": "^11.8.0",
-    "mochawesome": "^7.1.3",
-    "prettier": "^3.8.3",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^6.0.1",
+    "mochawesome": "^8.0.1",
+    "mysql2": "^3.24.2",
+    "prettier": "^3.9.6",
+    "reflect-metadata": "^0.2.2",
     "selenium-webdriver": "^4.47.0",
-    "typescript": "^5.9.3"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^6.0.3",
+    "zod": "^4.4.3"
   }
 }
