@@ -26,7 +26,7 @@ export default class Pages {
 
   async quit() {
     if (this.driver != null) {
-      this.driver.quit();
+      await this.driver.quit();
     }
   }
 }
