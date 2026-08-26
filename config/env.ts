@@ -5,7 +5,7 @@ dotenv.config();
 
 const envSchema = z.object({
   BASE_URL: z.url(),
-  BROWSER_NAME: z.enum(["chrome", "firefox", "edge"]).default("chrome"),
+  BROWSER_NAME: z.enum(["chrome", "firefox"]).default("chrome"),
   BROWSER_MODE: z.enum(["headless", "display"]).default("headless"),
 
   LOGIN_NAME: z.string().min(1),
