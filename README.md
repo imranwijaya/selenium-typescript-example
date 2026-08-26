@@ -174,6 +174,8 @@ Test execution provides multiple forms of evidence:
 - GitHub Actions workflow artifacts
 - GitHub Pages published reports
 
+The Selenium E2E suite has been validated locally and through GitHub Actions using Node.js 24 and the current Selenium WebDriver configuration.
+
 ## Project Structure
 
 ```text
