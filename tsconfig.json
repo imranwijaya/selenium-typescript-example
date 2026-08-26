@@ -1,15 +1,40 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "module": "commonjs",
-    "target": "es6",
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "rootDir": ".",
     "outDir": "./dist",
-    // "paths": {
-    //   "@config/*": ["config/*"],
-    //   "@lib/*": ["lib/*"],
-    //   "@pages/*": ["pages/*"],
-    // }
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@config/*": [
+        "./config/*"
+      ],
+      "@lib/*": [
+        "./lib/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@repositories/*": [
+        "./repositories/*"
+      ]
+    }
   },
-  // "include": ["lib/**/*.ts", "pages/**/*.ts", "specs/**/*.spec.ts", "tests/**/*.test.ts"],
-  // "exclude": ["node_modules", "dist"]
+  "include": [
+    "*.ts",
+    "config/**/*.ts",
+    "lib/**/*.ts",
+    "pages/**/*.ts",
+    "repositories/**/*.ts",
+    "specs/**/*.ts",
+    "tests/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

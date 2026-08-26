@@ -1,0 +1,184 @@
+name: Selenium E2E
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  repository_dispatch:
+    types:
+      - application-cd
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+run-name: >-
+  Selenium E2E —
+  ${{ github.event_name == 'repository_dispatch' && github.event.action || github.event_name }}
+
+jobs:
+  selenium:
+    name: Selenium E2E
+    runs-on: ubuntu-24.04
+
+    env:
+      BASE_URL: >-
+        ${{ github.event_name == 'repository_dispatch' &&
+            github.event.action == 'application-cd' &&
+            github.event.client_payload.base_url ||
+            vars.BASE_URL }}
+      BROWSER_NAME: ${{ vars.BROWSER_NAME }}
+      BROWSER_MODE: ${{ vars.BROWSER_MODE }}
+      LOGIN_NAME: ${{ vars.LOGIN_NAME }}
+      LOGIN_EMAIL: ${{ vars.LOGIN_EMAIL }}
+      LOGIN_PASSWORD: ${{ vars.LOGIN_PASSWORD }}
+
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Identify test trigger
+        id: trigger
+        shell: bash
+        run: |
+          case "${{ github.event_name }}" in
+            push)
+              echo "source=repository-push" >> "${GITHUB_OUTPUT}"
+              ;;
+            pull_request)
+              echo "source=repository-pull-request" >> "${GITHUB_OUTPUT}"
+              ;;
+            repository_dispatch)
+              echo "source=${{ github.event.action }}" >> "${GITHUB_OUTPUT}"
+              ;;
+            workflow_dispatch)
+              echo "source=workflow-dispatch" >> "${GITHUB_OUTPUT}"
+              ;;
+            *)
+              echo "source=unknown" >> "${GITHUB_OUTPUT}"
+              exit 1
+              ;;
+          esac
+
+      - name: Validate deployed application URL
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'application-cd'
+        shell: bash
+        run: |
+          test "${{ github.event.client_payload.base_url }}" = "https://project-for-testing.abangkito.com"
+
+      - name: Run Selenium E2E tests
+        id: tests
+        continue-on-error: true
+        run: npm run test
+
+      - name: Record test execution context
+        if: always()
+        run: |
+          {
+            echo "## Selenium E2E Execution"
+            echo
+            echo "- Trigger: \`${{ steps.trigger.outputs.source }}\`"
+            echo "- Workflow event: \`${{ github.event_name }}\`"
+            echo "- Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+            if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+              echo "- Application SHA: \`${{ github.event.client_payload.application_sha }}\`"
+              echo "- Application ref: \`${{ github.event.client_payload.application_ref }}\`"
+              echo "- Application workflow: ${{ github.event.client_payload.application_run_url }}"
+            fi
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mochawesome-report
+          path: reports/
+          if-no-files-found: warn
+
+      # Only publish Pages from pushes to main.
+      # PRs still get the Mochawesome artifact above.
+      - name: Prepare GitHub Pages
+        if: >-
+          always() &&
+          github.ref == 'refs/heads/main' &&
+          github.event_name == 'push'
+        run: |
+          rm -rf _pages
+
+          # /example
+          mkdir -p _pages/example
+          cp -R reports/example/. _pages/example/
+
+          # /report
+          mkdir -p _pages/report
+          cp -R reports/. _pages/report/
+
+          # The generated report is reports/index.html.
+          # Remove the example directory from /report.
+          rm -rf _pages/report/example
+
+          echo "GitHub Pages contents:"
+          find _pages -maxdepth 3 -type f | sort
+
+      - name: Configure GitHub Pages
+        if: >-
+          always() &&
+          github.ref == 'refs/heads/main' &&
+          github.event_name == 'push'
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: >-
+          always() &&
+          github.ref == 'refs/heads/main' &&
+          github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _pages
+
+      - name: Fail workflow if tests failed
+        if: steps.tests.outcome == 'failure'
+        run: |
+          echo "Selenium E2E tests failed."
+          exit 1
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: selenium
+    if: >-
+      always() &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push' &&
+      needs.selenium.result != 'cancelled'
+
+    runs-on: ubuntu-24.04
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -19,8 +19,11 @@ yarn-error.log*
 .pnpm-debug.log*
 
 *.tsbuildinfo
-*.zip
 *.md
+*.zip
+.env
+.env.*
+!.env.example
 !README.md
 
 /.circleci
