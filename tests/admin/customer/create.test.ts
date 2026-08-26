@@ -248,6 +248,10 @@ describe("Create Customer", function () {
   });
 
   context("Successful creation", async function () {
+    before(async function () {
+      await page.customer.create.open();
+    });
+
     it("creates a customer with valid data", async function () {
       const customer = customerRepository.generateFakeData();
 

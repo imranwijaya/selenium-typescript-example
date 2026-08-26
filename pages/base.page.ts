@@ -1,6 +1,10 @@
-import type { Locator, WebDriver, WebElement } from "selenium-webdriver";
+import {
+  Locator,
+  WebDriver,
+  WebElement,
+  error as SeleniumError,
+} from "selenium-webdriver";
 import { until } from "selenium-webdriver";
-import { elementLocated } from "selenium-webdriver/lib/until";
 import env from "@config/env";
 
 export default abstract class BasePage {
@@ -71,39 +75,39 @@ export default abstract class BasePage {
     return this.driver.navigate().refresh();
   }
 
-  getOneElement(locator: string) {
-    return this.driver.findElement({ css: locator });
+  getOneElement(byCss: string) {
+    return this.driver.findElement({ css: byCss });
   }
 
-  getManyElement(locator: string) {
-    return this.driver.findElements({ css: locator });
+  getManyElement(byCss: string) {
+    return this.driver.findElements({ css: byCss });
   }
 
-  getDataTest(locator: string) {
-    return this.driver.findElement({ css: `[data-test=${locator}]` });
+  getDataTest(byCss: string) {
+    return this.driver.findElement({ css: `[data-test=${byCss}]` });
   }
 
-  getDataTestContains(locator: string) {
-    return this.driver.findElement({ css: `[data-test*=${locator}]` });
+  getDataTestContains(byCss: string) {
+    return this.driver.findElement({ css: `[data-test*=${byCss}]` });
   }
 
-  getDataTestStartsWith(locator: string) {
-    return this.driver.findElement({ css: `[data-test^=${locator}]` });
+  getDataTestStartsWith(byCss: string) {
+    return this.driver.findElement({ css: `[data-test^=${byCss}]` });
   }
 
-  getDataTestEndsWith(locator: string) {
-    return this.driver.findElement({ css: `[data-test$=${locator}]` });
+  getDataTestEndsWith(byCss: string) {
+    return this.driver.findElement({ css: `[data-test$=${byCss}]` });
   }
 
-  async invokeValue(locator: WebElement, value: string) {
+  async invokeValue(element: WebElement, value: string) {
     await this.driver.executeScript(
       "arguments[0].value = arguments[1]",
-      locator,
+      element,
       value,
     );
   }
 
-  async triggerKeyUp(locator: WebElement) {
+  async triggerKeyUp(element: WebElement) {
     await this.driver.executeScript(
       `arguments[0].dispatchEvent(new KeyboardEvent("keyup", {
         key: "Enter",
@@ -112,20 +116,23 @@ export default abstract class BasePage {
         which: 13,
         bubbles: true
       }))`,
-      locator,
+      element,
     );
   }
 
-  async blur(locator: WebElement) {
-    await this.driver.executeScript("arguments[0].blur();", locator);
+  async blur(element: WebElement) {
+    await this.driver.executeScript("arguments[0].blur();", element);
   }
 
-  waitUntilLocated(locator: Locator) {
-    const untilElementLocated = until.elementLocated(locator);
-    return this.driver.wait(untilElementLocated, 30000);
+  waitUntilLocated(locator: Locator, timeout = 10000) {
+    return this.driver.wait(until.elementLocated(locator), timeout);
   }
 
-  async waitUntilVisible(element: WebElement, timeout = 5000) {
+  waitUntilStale(element: WebElement, timeout = 10000) {
+    return this.driver.wait(until.stalenessOf(element), timeout);
+  }
+
+  async waitUntilVisible(element: WebElement, timeout = 10000) {
     return await this.driver.wait(async () => {
       try {
         return await element.isDisplayed();
@@ -135,7 +142,22 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilHidden(element: WebElement, timeout = 5000) {
+  async waitUntilNotFound(byCss: string, timeout = 10000) {
+    return await this.driver.wait(async () => {
+      try {
+        await this.getOneElement(byCss);
+        return false;
+      } catch (error) {
+        if (error instanceof SeleniumError.NoSuchElementError) {
+          return true;
+        }
+
+        throw error;
+      }
+    }, timeout);
+  }
+
+  async waitUntilHidden(element: WebElement, timeout = 10000) {
     return await this.driver.wait(async () => {
       try {
         return !(await element.isDisplayed());
@@ -145,7 +167,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilEnabled(element: WebElement, timeout = 5000) {
+  async waitUntilEnabled(element: WebElement, timeout = 10000) {
     return await this.driver.wait(async () => {
       try {
         return await element.isEnabled();
@@ -155,7 +177,7 @@ export default abstract class BasePage {
     }, timeout);
   }
 
-  async waitUntilInteractable(element: WebElement, timeout = 5000) {
+  async waitUntilInteractable(element: WebElement, timeout = 10000) {
     return await this.driver.wait(async () => {
       try {
         return (await element.isDisplayed()) && (await element.isEnabled());

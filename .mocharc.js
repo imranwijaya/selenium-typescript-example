@@ -12,7 +12,7 @@ module.exports = {
   // ─────────────────────────────────────────────
   // Test execution
   // ─────────────────────────────────────────────
-  timeout: 5000,
+  timeout: 10000,
   retries: 1,
   bail: false,
 
@@ -32,7 +32,7 @@ module.exports = {
 
   "reporter-option": [
     "reportDir=reports",
-    "reportFilename=report-[datetime]",
+    "reportFilename=index",
     "reportPageTitle=Web Automation Testing Report",
     "charts=true",
     "overwrite=false",

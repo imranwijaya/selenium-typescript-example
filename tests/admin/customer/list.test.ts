@@ -148,7 +148,7 @@ describe("Customer List", function () {
       ).to.be.equal(true);
 
       await page.customer.list.deleteConfirmationConfirmButton.click();
-      await page.customer.list.waitUntilHidden(deleteModal);
+      await page.customer.list.waitUntilStale(deleteModal);
 
       expect(await page.customer.list.url()).to.contain("/admin/customer");
       expect(await page.customer.list.toast.getText()).to.be.equal(
