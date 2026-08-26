@@ -225,7 +225,7 @@ export default abstract class BasePage {
 
   async quit() {
     if (this.driver != null) {
-      this.driver.quit();
+      await this.driver.quit();
     }
   }
 
