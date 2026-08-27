@@ -125,6 +125,7 @@ jobs:
           github.event_name == 'push'
         run: |
           rm -rf _pages
+          mkdir -p _pages
 
           # Root landing page
           cp .github/pages/index.html _pages/index.html
