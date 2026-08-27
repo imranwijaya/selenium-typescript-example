@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selenium TypeScript Example — Test Reports</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      color: #1f2937;
+      background: #f8fafc;
+    }
+
+    body {
+      margin: 0;
+      padding: 40px 16px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(28px, 4vw, 36px);
+    }
+
+    .intro {
+      color: #64748b;
+      margin-bottom: 32px;
+    }
+
+    .reports {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .card p {
+      flex: 1;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 16px;
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Selenium TypeScript Example</h1>
+    <p class="intro">
+      Test reports generated from the Selenium TypeScript example project.
+    </p>
+
+    <section class="reports">
+      <article class="card">
+        <h2>Latest CI Report</h2>
+        <p>
+          The latest Selenium E2E report generated automatically
+          by GitHub Actions.
+        </p>
+        <a href="./report/">View latest report →</a>
+      </article>
+
+      <article class="card">
+        <h2>Passing Test — npm test</h2>
+        <p>
+          Example Mochawesome report generated locally with
+          <code>npm run test</code>. All tests passed.
+        </p>
+        <a href="./example/">View report →</a>
+      </article>
+
+      <article class="card">
+        <h2>Passing Test — TypeScript</h2>
+        <p>
+          Example Mochawesome report generated locally with
+          <code>npm run dev</code>. All tests passed.
+        </p>
+        <a href="./example/typescript.html">View report →</a>
+      </article>
+
+      <article class="card">
+        <h2>Failed Test Example</h2>
+        <p>
+          Example Mochawesome report demonstrating a test execution
+          where some tests failed.
+        </p>
+        <a href="./example/failed.html">View report →</a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
