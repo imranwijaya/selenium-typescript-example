@@ -126,6 +126,9 @@ jobs:
         run: |
           rm -rf _pages
 
+          # Root landing page
+          cp .github/pages/index.html _pages/index.html
+
           # /example
           mkdir -p _pages/example
           cp -R reports/example/. _pages/example/
