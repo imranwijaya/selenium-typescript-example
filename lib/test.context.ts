@@ -6,6 +6,7 @@ import {
   type WebDriverFactoryOptions,
 } from "@lib/webdriver.factory";
 import { createTestMetadata, type TestMetadata } from "@lib/test.metadata";
+import { recordTestMetadata } from "@lib/test.execution.metadata";
 
 export default class TestContext {
   private _driver?: WebDriver;
@@ -23,6 +24,7 @@ export default class TestContext {
     this._driver = await factory.build();
     this._metadata = createTestMetadata(factory.metadata);
     this._pages = new Pages(this._driver);
+    recordTestMetadata(this._metadata);
   }
 
   get driver(): WebDriver {
