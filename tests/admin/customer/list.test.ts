@@ -1,23 +1,20 @@
 import { after, before, beforeEach, describe, it } from "mocha";
 import { expect } from "chai";
 import dayjs from "dayjs";
-import Pages from "@pages/index";
-import { WebDriverFactory } from "@lib/webdriver.factory";
+import TestContext from "@lib/test.context";
 import customerRepository from "@repositories/customer.repository";
 
 describe("Customer List", function () {
-  let page: Pages;
+  const ctx = new TestContext();
 
   before(async function () {
-    const driver = await new WebDriverFactory().build();
-    page = new Pages(driver);
-
-    await page.auth.login();
+    await ctx.start();
+    await ctx.pages.auth.login();
   });
 
   context("Table", function () {
     beforeEach(async function () {
-      await page.customer.list.open();
+      await ctx.pages.customer.list.open();
     });
 
     it("displays the expected table headers", function () {
@@ -33,7 +30,7 @@ describe("Customer List", function () {
 
       tableHeaders.forEach(async function (value, index) {
         expect(
-          await page.customer.list.tableHeaderName(index + 1).getText(),
+          await ctx.pages.customer.list.tableHeaderName(index + 1).getText(),
         ).to.equal(value);
       });
     });
@@ -51,7 +48,7 @@ describe("Customer List", function () {
 
       expectedData.forEach(async function (value, index) {
         expect(
-          await page.customer.list.tableDataName(1, index + 1).getText(),
+          await ctx.pages.customer.list.tableDataName(1, index + 1).getText(),
         ).to.be.equal(value);
       });
     });
@@ -59,66 +56,70 @@ describe("Customer List", function () {
 
   context("Create Customer", function () {
     beforeEach(async function () {
-      await page.customer.list.open();
+      await ctx.pages.customer.list.open();
     });
 
     it("navigates to the create customer page when Create button is clicked", async function () {
-      await page.customer.list.addButton.click();
+      await ctx.pages.customer.list.addButton.click();
 
-      expect(await page.customer.create.url()).to.contain(
+      expect(await ctx.pages.customer.create.url()).to.contain(
         "/admin/customer/create",
       );
-      expect(await page.customer.create.title()).to.be.equal("Create Customer");
+      expect(await ctx.pages.customer.create.title()).to.be.equal(
+        "Create Customer",
+      );
     });
   });
 
   context("Update Customer", function () {
     beforeEach(async function () {
-      await page.customer.list.open();
+      await ctx.pages.customer.list.open();
     });
 
     it("navigates to the update customer page when Edit button is clicked", async function () {
-      await page.customer.list.editButton(1).click();
+      await ctx.pages.customer.list.editButton(1).click();
 
-      expect(await page.customer.update.url()).to.include(
+      expect(await ctx.pages.customer.update.url()).to.include(
         "/admin/customer/update",
       );
-      expect(await page.customer.update.title()).to.be.equal("Update Customer");
+      expect(await ctx.pages.customer.update.title()).to.be.equal(
+        "Update Customer",
+      );
     });
   });
 
   context("Delete Customer", function () {
     beforeEach(async function () {
-      await page.customer.list.open();
+      await ctx.pages.customer.list.open();
     });
 
     it("displays the delete confirmation dialog", async function () {
-      await page.customer.list.deleteButton(2).click();
+      await ctx.pages.customer.list.deleteButton(2).click();
 
       expect(
-        await page.customer.list.deleteConfirmationModal.isDisplayed(),
+        await ctx.pages.customer.list.deleteConfirmationModal.isDisplayed(),
       ).to.be.equal(true);
       expect(
-        await page.customer.list.deleteConfirmationConfirmButton.getText(),
+        await ctx.pages.customer.list.deleteConfirmationConfirmButton.getText(),
       ).to.be.equal("Yes");
       expect(
-        await page.customer.list.deleteConfirmationCancelButton.getText(),
+        await ctx.pages.customer.list.deleteConfirmationCancelButton.getText(),
       ).to.be.equal("No");
     });
 
     it("closes the delete confirmation dialog when Cancel is clicked", async function () {
-      await page.customer.list.deleteButton(2).click();
+      await ctx.pages.customer.list.deleteButton(2).click();
 
       expect(
-        await page.customer.list.deleteConfirmationModal.isDisplayed(),
+        await ctx.pages.customer.list.deleteConfirmationModal.isDisplayed(),
       ).to.be.equal(true);
 
-      await page.customer.list.deleteConfirmationCancelButton.click();
+      await ctx.pages.customer.list.deleteConfirmationCancelButton.click();
       const deleteConfirmationModal =
-        await page.customer.list.deleteConfirmationModal;
+        await ctx.pages.customer.list.deleteConfirmationModal;
 
       expect(
-        await page.customer.list.waitUntilHidden(deleteConfirmationModal),
+        await ctx.pages.customer.list.waitUntilHidden(deleteConfirmationModal),
       ).to.be.equal(true);
     });
 
@@ -129,29 +130,29 @@ describe("Customer List", function () {
       expect(result.affectedRows).to.be.equal(1);
       expect(result.insertId).to.be.greaterThan(1);
 
-      await page.customer.list.reload();
+      await ctx.pages.customer.list.reload();
 
-      const tableSearch = await page.customer.list.tableSearch;
-      await page.customer.list.invokeValue(tableSearch, customer.email);
-      await page.customer.list.triggerKeyUp(tableSearch);
+      const tableSearch = await ctx.pages.customer.list.tableSearch;
+      await ctx.pages.customer.list.invokeValue(tableSearch, customer.email);
+      await ctx.pages.customer.list.triggerKeyUp(tableSearch);
       const tableData =
-        await page.customer.list.getManyElement("#table tbody tr");
+        await ctx.pages.customer.list.getManyElement("#table tbody tr");
 
       expect(tableData).to.have.length(1);
       expect(await tableData[0].getText()).to.contain(customer.email);
 
-      await page.customer.list.deleteButtonContains.click();
-      const deleteModal = await page.customer.list.deleteConfirmationModal;
+      await ctx.pages.customer.list.deleteButtonContains.click();
+      const deleteModal = await ctx.pages.customer.list.deleteConfirmationModal;
 
       expect(
-        await page.customer.list.waitUntilVisible(deleteModal),
+        await ctx.pages.customer.list.waitUntilVisible(deleteModal),
       ).to.be.equal(true);
 
-      await page.customer.list.deleteConfirmationConfirmButton.click();
-      await page.customer.list.waitUntilStale(deleteModal);
+      await ctx.pages.customer.list.deleteConfirmationConfirmButton.click();
+      await ctx.pages.customer.list.waitUntilStale(deleteModal);
 
-      expect(await page.customer.list.url()).to.contain("/admin/customer");
-      expect(await page.customer.list.toast.getText()).to.be.equal(
+      expect(await ctx.pages.customer.list.url()).to.contain("/admin/customer");
+      expect(await ctx.pages.customer.list.toast.getText()).to.be.equal(
         "Data deleted",
       );
 
@@ -164,6 +165,6 @@ describe("Customer List", function () {
   });
 
   after(async function () {
-    await page.quit();
+    await ctx.stop();
   });
 });

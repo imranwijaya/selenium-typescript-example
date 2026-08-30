@@ -1,6 +1,6 @@
 import BasePage from "@pages/base.page";
 
-export default class Admin extends BasePage {
+export default abstract class Admin extends BasePage {
   get contentHeader() {
     return this.getDataTest("content-header");
   }
